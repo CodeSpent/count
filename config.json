@@ -1,0 +1,16 @@
+{
+  "token": "",
+  "server": "342458782949875134",
+  "totalChannel": {
+    "id": "352314d718f4875f28",
+    "name": "Total Members"
+  },
+  "onlineChannel": {
+    "id": "369483985418813116",
+    "name": "Online"
+  },
+  "botChannel": {
+    "id": "345876991234719499",
+    "name": "Bots"
+  }
+}
