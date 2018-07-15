@@ -49,7 +49,11 @@ git clone "https://github.com/volskaya/count"
   + Total Members
   + Online
   + Bots
-3. Launch `main.js` with [Node](https://nodejs.org/) 
+3. Open a shell in count directory and fetch node dependencies with `npm` from [Node](https://nodejs.org/) 
+```sh
+npm update
+```
+4. Launch `main.js` with [Node](https://nodejs.org/) 
 ``` sh
 node main.js
 ```
