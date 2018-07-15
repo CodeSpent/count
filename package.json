@@ -16,7 +16,7 @@
     "url": "git+https://github.com/volskaya/count.git"
   },
   "author": "Sacra Volskaya",
-  "license": "GPL-3.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/volskaya/count/issues"
   },
