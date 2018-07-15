@@ -123,11 +123,17 @@ const assignReferences = () => {
 }
 
 (function() {  // Encapsulate bot, just in case
+  if (Config.token == "") {
+    console.error("Please add a valid token to config.json");
+    process.exit();
+  }
+
   const bot = new Discord.Client();
 
   // Callbacks
   bot.on("ready", async () => {
     console.log(`Bot logged in as ${bot.user.username}\n`);
+
     try {
       server = bot.guilds.get(Config.server);
     } catch(e) {
