@@ -1,0 +1,23 @@
+{
+  "name": "count",
+  "version": "1.0.0",
+  "description": "Discord server metrics bot",
+  "main": "main.js",
+  "dependencies": {
+    "discord.js": "^11.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volskaya/count.git"
+  },
+  "author": "Sacra Volskaya",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/volskaya/count/issues"
+  },
+  "homepage": "https://github.com/volskaya/count#readme"
+}
