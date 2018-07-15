@@ -15,10 +15,10 @@ box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);"
 
 ## Config Format
 
-Your *token* , target *server id* and *channel id's* need to be specified in *config.json*.
+Your `token` , target `server id` and `channel id's` need to be specified in `config.json`.
 An empty template is already included.
 
-**Note:** If you don't know your server's *ID's*, launch the bot just the *token*, to print some useful output.
+**Note:** If you don't know your server ID, launch the bot just the `token`, to print some useful output.
 
 ###### Template
 ``` json
@@ -45,8 +45,11 @@ An empty template is already included.
 ``` sh
 git clone "https://github.com/volskaya/count"
 ```
-2. Write down your server *ID* and the *ID's* of your server channels, in *json.conf*, that you wish the bot to update
+2. Write down your server *ID* and the *ID's* of your server channels, in `json.conf`, that you wish the bot to update
   + Total Members
   + Online
   + Bots
-3. Launch *main.js* with [Node](https://nodejs.org/) 
+3. Launch `main.js` with [Node](https://nodejs.org/) 
+``` sh
+node main.js
+```
