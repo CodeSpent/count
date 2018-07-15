@@ -54,6 +54,10 @@ git clone "https://github.com/volskaya/count"
 npm update
 ```
 4. Launch `main.js` with [Node](https://nodejs.org/) 
-``` sh
+```sh
 node main.js
+```
+or 
+``` sh
+npm run bot
 ```
