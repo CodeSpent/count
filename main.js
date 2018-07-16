@@ -60,7 +60,7 @@ const Config = require("./config.json");
 
     server.members.map(m => {
       if (m.user.bot) bots++;
-      else if (m.presence.status == 'online') users++;
+      else if (m.presence.status != 'offline') users++;
     });
 
     return [members, users, bots];
