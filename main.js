@@ -52,7 +52,7 @@ const Config = require("./config.json");
 
   // Count both of them, to avoid iterating too many times
   const getMetrics = () => {
-    if (server == null) [0, 0, 0];
+    if (server == null) return [0, 0, 0];
 
     let members = server.members.size,
         users = 0,
