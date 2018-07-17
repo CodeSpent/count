@@ -108,7 +108,7 @@ const Config = require("./config.json");
       cooling = true;
 
       // Most likely an infinite loop on big servers
-      setTimeout(async () => {
+      setTimeout(() => {
         cooling = false;
 
         if (pending) {  // Cooldown was hit, update
