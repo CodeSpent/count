@@ -1,6 +1,7 @@
 {
   "token": "",
   "server": "342458782949875134",
+  "cooldown": 10,
   "totalChannel": {
     "id": "352314d718f4875f28",
     "name": "Total Members"

@@ -16,12 +16,11 @@ const Discord = require("discord.js");
 const Config = require("./config.json");
 
 (function() {  // Encapsulate bot, just in case
-  let server = null;  // Assigned, after bot is ready and correct server ID found
-  let updates = 0;  // Count dispatched updates
   // Add guards to Config variables
   const config = {
     token: Config.token || '',
     server: Config.server || '',
+    cooldown: Config.cooldown || 10,  // Default to 10 seconds
     totalChannel: {
       id: Config.totalChannel.id || '',
       name: Config.totalChannel.name || ''
@@ -36,6 +35,12 @@ const Config = require("./config.json");
     }
   }
 
+  console.log(`Cooldown set to ${config.cooldown} seconds`);
+
+  let server = null,  // Assigned, after bot is ready and correct server ID found
+      cooling = false,  // Set true in updateCounters(), set false in timer
+      pending = false,  // If the cooldown was hit, queue up another update
+      updates = 0;  // Count dispatched updates
 
   const state = {
     members: 0,
@@ -96,7 +101,22 @@ const Config = require("./config.json");
   // Iterate trough available servers and update their counters
   // It also recalculates metrics within the same loop
   const updateCounters = async () => {
-    invalidateState();  // Update metrics, before setting channel names
+    if (cooling) {
+      // Queue up another update, if the cooldown was hit and return early
+      pending = true; return;
+    } else if (config.cooldown !== 0) {  // Disabled, if cooldown == 0
+      cooling = true;
+
+      // Most likely an infinite loop on big servers
+      setTimeout(async () => {
+        cooling = false;
+
+        if (pending) {  // Cooldown was hit, update
+          pending = false;
+          updateCounters();
+        }
+      }, config.cooldown * 1000);
+    }
 
     invalidateState();  // Update metrics, before setting channel names
 
