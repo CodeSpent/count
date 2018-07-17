@@ -18,6 +18,24 @@ const Config = require("./config.json");
 (function() {  // Encapsulate bot, just in case
   let server = null;  // Assigned, after bot is ready and correct server ID found
   let updates = 0;  // Count dispatched updates
+  // Add guards to Config variables
+  const config = {
+    token: Config.token || '',
+    server: Config.server || '',
+    totalChannel: {
+      id: Config.totalChannel.id || '',
+      name: Config.totalChannel.name || ''
+    },
+    onlineChannel: {
+      id: Config.onlineChannel.id || '',
+      name: Config.onlineChannel.name || ''
+    },
+    botChannel: {
+      id: Config.botChannel.id || '',
+      name: Config.botChannel.name || ''
+    }
+  }
+
 
   const state = {
     members: 0,
@@ -27,22 +45,22 @@ const Config = require("./config.json");
 
   const channels = {
     totalCount: {
-      id: Config.totalChannel.id,
+      id: config.totalChannel.id,
       ref: null,
       state: 'members',
-      name: Config.totalChannel.name
+      name: config.totalChannel.name
     },
     onlineCount: {
-      id: Config.onlineChannel.id,
+      id: config.onlineChannel.id,
       ref: null,
       state: 'users',
-      name: Config.onlineChannel.name
+      name: config.onlineChannel.name
     },
     botCount: {
-      id: Config.botChannel.id,
+      id: config.botChannel.id,
       ref: null,
       state: 'bots',
-      name: Config.botChannel.name
+      name: config.botChannel.name
     }
   };
 
@@ -52,7 +70,7 @@ const Config = require("./config.json");
 
   // Count both of them, to avoid iterating too many times
   const getMetrics = () => {
-    if (server == null) return [0, 0, 0];
+    if (server === null) return [0, 0, 0];
 
     let members = server.members.size,
         users = 0,
@@ -60,7 +78,7 @@ const Config = require("./config.json");
 
     server.members.map(m => {
       if (m.user.bot) bots++;
-      else if (m.presence.status != 'offline') users++;
+      else if (m.presence.status !== 'offline') users++;
     });
 
     return [members, users, bots];
@@ -80,12 +98,13 @@ const Config = require("./config.json");
   const updateCounters = async () => {
     invalidateState();  // Update metrics, before setting channel names
 
-    updates++;
+    invalidateState();  // Update metrics, before setting channel names
 
     console.log(`[${updates}] Updating counters…`);
     console.log(formatMetrics());
+    updates++;
 
-    return Promise.all(
+    await Promise.all(
       Object.values(channels).map(async channel => {
         if (channel.ref != null) {
           await channel.ref.setName(`${channel.name} : ${state[channel.state]}`)
@@ -110,6 +129,7 @@ const Config = require("./config.json");
 
     server.channels.forEach(channel => {
       console.log(`    [${i}] ${channel.name}, id - ${channel.id}`);
+      i++;
 
       Object.keys(channels).forEach(key => {
         if (channel.id == channels[key].id) {
@@ -122,21 +142,24 @@ const Config = require("./config.json");
     console.log('');  // New line
   }
 
-  if (Config.token == "") {
-    console.error("Please add a valid token to config.json");
+  if (config.token === '') {
+    console.error('Please add a valid token to config.json');
+    process.exit();
+  } else if (config.server === '') {
+    console.error('Please add a valid server id to config.json');
     process.exit();
   }
 
   const bot = new Discord.Client();
 
   // Callbacks
-  bot.on("ready", async () => {
+  bot.on("ready", () => {
     console.log(`Bot logged in as ${bot.user.username}\n`);
 
     try {
-      server = bot.guilds.get(Config.server);
+      server = bot.guilds.get(config.server);
     } catch(e) {
-      console.log(`Bot is not added to server ID - ${Config.server}.`);
+      console.log(`Bot is not added to server ID - ${config.server}.`);
       console.log('Exitting…');
       bot.destroy();
 
@@ -147,11 +170,11 @@ const Config = require("./config.json");
     updateCounters();  // Force update, when the bot is ready
   });
 
-  bot.on('guildMemberAdd', async () => await updateCounters());
-  bot.on('guildMemberAvailable', async () => await updateCounters());
-  bot.on('guildMemberRemove', async () => await updateCounters());
-  bot.on('guildMemberUpdate', async () => await updateCounters());
-  bot.on('presenceUpdate', async () => await updateCounters());
+  bot.on('guildMemberAdd', updateCounters);
+  bot.on('guildMemberAvailable', updateCounters);
+  bot.on('guildMemberRemove',  updateCounters);
+  bot.on('guildMemberUpdate', updateCounters);
+  bot.on('presenceUpdate', updateCounters);
 
   // Set meters to "Off", before exiting…
   process.on('SIGINT', async () => {
